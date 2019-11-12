@@ -1,0 +1,25 @@
+(*rotate-left(x): returns ret*)
+(*Given a tree with pointers 'left' and 'right', rotates the left child of the root into the root position*)
+
+(*ERROR: not checking if the left child is nil before trying to rotate*)
+
+Reach([x], [left,right], [nil])
+
+init {
+ x_l := nil;
+ x_lr := nil;
+ ret := nil
+ }
+
+assume(T != F);
+
+if (x = nil) then {
+ ret := x
+}
+else { 
+ x_l := left(x);
+ x_lr := right(x_l);
+ (*ERROR because x_l might have been nil*)
+ right(x_l) := x;
+ left(x) := x_lr
+}

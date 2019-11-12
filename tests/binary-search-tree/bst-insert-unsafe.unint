@@ -1,0 +1,55 @@
+(* Insert a node z with key k into binary search tree rooted at x *)
+
+(*Error: programmer assigns x after while loop when the intended
+assignment already took place in the loop*)
+
+Reach([x],[left,right],[NULL])
+
+init {
+ z := NULL;
+ w := NULL;
+ ret := x
+}
+
+assume(T != F);
+z <- alloc();
+left(z) := NULL;
+right(z) := NULL;
+key(z) := k;
+if(x = NULL) then {
+  ret := z
+}
+else {
+  ret := x;
+  kx := key(x);
+  lte1 := LTE(kx, k);
+  if(lte1 = T) then {
+    w := right(x)
+  }
+  else {
+    w := left(x)
+  };
+  while(w != NULL) {
+    kw := key(w);
+    x := w;
+    lte2 := LTE(kw, k);
+    if(lte2 = T) then {
+      w := right(w)
+    }
+    else {
+      w := left(w)
+    }
+  };
+
+  (*Error*)
+   x := w;
+
+  kx := key(x);
+  lte3 := LTE(kx, k);
+  if(lte3 = T) then {
+    right(x) := z
+  }
+  else {
+    left(x) := z
+  }
+}

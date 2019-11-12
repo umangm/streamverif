@@ -1,0 +1,64 @@
+(*sll-delete-all(x, k) deletes all nodes with key k in list pointed to
+by x and returns resulting list pointed to by ret*)
+
+Reach([x],[next],[NULL])
+
+init {
+ tmp := NULL;
+ nx := NULL;
+ ret := x
+}
+
+assume (T != F);
+
+if(x = NULL) then {
+  skip
+}
+else {
+
+  kx := key(x);
+  if(kx = k) then {
+    flag := T
+  }
+  else {
+    flag := F
+  };
+
+  while(flag = T) {
+    tmp := x;
+    x := next(x);
+    free(tmp);
+
+    if (x != NULL) then {
+      kx := key(x);
+      if (kx = k) then {
+         flag := T
+      } else {
+         flag := F
+        }
+    } else {
+      flag := F
+    }
+  };
+
+  if(x = NULL) then {
+    skip
+  }
+  else {
+    ret := x;
+    nx := next(x);
+    while(nx != NULL){
+      knx := key(nx);
+      if(knx = k) then {
+        tmp := nx;
+        nx := next(nx);
+        free(tmp);
+        next(x) := nx
+      }
+      else {
+        x := nx;
+        nx := next(nx)
+      }
+    }
+  }
+}

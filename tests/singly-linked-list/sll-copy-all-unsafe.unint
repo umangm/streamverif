@@ -1,0 +1,33 @@
+(*sll-copy-all-safe(x) copies the list pointed to by x into a list pointed to by z*)
+
+(*Error: programmer assumes x and z move in tandem, but a bad update
+prevents this*)
+
+Reach([x],[next],[NULL])
+
+init {
+ z := NULL;
+ nx := z;
+ zprime := NULL
+}
+
+if(x = NULL) then {
+	z := NULL
+}
+else{
+	z <- alloc();
+	next(z) := NULL;
+	while(x != NULL){
+		nx := next(x);
+		if(nx != NULL) then {
+			zprime <- alloc();
+			next(zprime) := zprime
+		} else {
+      skip
+    };
+		kx := key(x);
+		key(z) := kx;
+		x := next(x);
+		z := next(z)
+	}
+}

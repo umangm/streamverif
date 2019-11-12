@@ -1,0 +1,20 @@
+(*sll-find-safe(x, k) returns b = T (b = F) if there is (not) a node with key k in
+the list pointed to by x *)
+
+Reach([x],[next],[NULL])
+
+init {
+
+}
+
+assume(T != F);
+b := F;
+while(x != NULL){
+  kx := key(x);
+  if(kx = k) then {
+    b := T
+  } else {
+    skip
+  };
+  x := next(x)
+}

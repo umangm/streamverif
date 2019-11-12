@@ -1,0 +1,81 @@
+Reach([x,y],[next],[NULL])
+
+init {
+ ret := NULL;
+ curr := NULL
+}
+
+assume(T != F);
+
+if(y = NULL) then {
+  ret := x
+}
+else {
+  
+  kx := key(x);
+  ky := key(y);
+
+  lte := LTE(kx, ky); 
+
+  if(lte = T) then {
+    curr := x;
+    x := next(x)
+  }
+  else {
+    curr := y;
+    y := next(y)
+  };
+
+  ret := curr;
+
+  both_not_null := F;
+
+  if(x != NULL) then {
+    if(y != NULL) then {
+      both_not_null := T
+    }
+    else {
+      skip
+    }
+  }
+  else {
+    skip
+  };
+
+  while(both_not_null = T) {
+    kx := key(x);
+    ky := key(y);
+    lte := LTE(kx, ky);
+    if(lte = T) then {
+      next(curr) := x;
+      x := next(x);
+      if(x = NULL) then {
+        both_not_null := F
+      }
+      else {
+        skip
+      }
+    }
+    else {
+      next(curr) := y;
+      y := next(y);
+      if(y = NULL) then {
+        both_not_null := F
+      }
+      else {
+        skip
+      }
+    }
+  };
+
+  while (x != NULL) {
+    curr := x;
+    x := next(x)
+  };
+
+  while (y != NULL) {
+    curr := y;
+    y := next(y)
+  }
+
+}

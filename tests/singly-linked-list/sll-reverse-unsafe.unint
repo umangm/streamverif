@@ -1,0 +1,14 @@
+Reach([x],[next],[NULL])
+
+init {
+ y := NULL;
+ tmp := y
+}
+
+while (x != y)
+{
+  tmp := next(x);
+  next(x) := y;
+  y := x;
+  x := tmp
+}

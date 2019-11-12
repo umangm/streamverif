@@ -1,0 +1,148 @@
+Reach([x], [left,right], [NULL])
+
+init {
+	l := NULL;
+	r := NULL;
+
+	r_l := NULL;
+	r_r := NULL;
+
+	r_l_l := NULL;
+	r_l_r := NULL;
+
+	l_l := NULL;
+	l_r := NULL;
+
+	l_r_l := NULL;
+	l_r_r := NULL;
+
+	ret := NULL
+}
+
+assume (T != F);
+
+l := left(x);
+r := right(x);
+lht := height(l);
+rht := height(r);
+
+lht_plus_1 := plus_1(lht);
+lht_plus_2 := plus_1(lht_plus_1);
+
+if (rht = lht_plus_2) then {
+
+	r_l := left(r);
+	rlht := height(r_l);
+
+	r_r := right(r);
+	rrht := height(r_r);
+
+	rlht_LTE_rrht := LTE(rlht, rrht);
+
+	if (rlht_LTE_rrht = T) then {
+
+  		inc_rlht := plus_1(rlht);
+		height(x) := inc_rlht;
+		right(x) := r_l;
+		inc_inc_rlht := plus_1(inc_rlht);
+		height(r) := inc_inc_rlht;
+		left(r) := x;
+		ret := r
+	
+	} 
+	else {
+		r_l_l := left(r_l);
+		r_l_r := right(r_l);
+
+  		inc_lht := plus_1(lht);
+		height(x) := inc_lht;
+
+		right(x) := r_l_l;
+		
+  		inc_rrht := plus_1(rrht);
+		height(r) := inc_rrht;
+
+		left(r) := r_l_r;
+		
+		inc_lht := plus_1(lht);
+  		inc_inc_lht := plus_1(inc_lht);
+		height(r_l) := inc_inc_lht;
+
+		left(r_l) := x;
+
+		right(r_l) := r;
+
+		ret := r_l
+	}
+} 
+else {
+	rht_plus_1 := plus_1(rht);
+	rht_plus_2 := plus_1(rht_plus_1);
+
+	if (lht = rht_plus_2) then {
+
+		l_l := left(l);
+		llht := height(l_l);
+
+		l_r := right(l);
+		lrht := height(l_r);
+
+		lrht_lte_llht := LTE(lrht, llht);
+
+		if (lrht_lte_llht = T) then {
+	  		inc_lrht := plus_1(lrht);
+			height(x) := inc_lrht;
+
+			left(x) := l_r;
+
+			lrht_plus_1 := plus_1(lrht);
+	  		inc_inc_lrht := plus_1(lrht_plus_1);
+			height(l) := inc_inc_lrht;
+
+			right(l) := x;
+
+			ret := l
+		} 
+		else {
+			(* lrht > llht *)
+			(* rotate-left |> rotate-right *)
+			
+			l_r_l := left(l_r);
+			l_r_r := right(l_r);
+
+	  		inc_rht := plus_1(rht);
+			height(x) := inc_rht;
+
+			left(x) := l_r_r;
+			
+			inc_llht := plus_1(llht);
+			
+			height(l) := inc_llht;
+
+			right(l) := l_r_l;
+
+			rht_plus_1 := plus_1(rht);
+			inc_inc_rht := plus_1(rht);
+
+			height(l_r) := inc_inc_rht;
+
+			left(l_r) := l;
+			right(l_r) := x;
+
+			ret := l_r
+		}
+	} 
+	else {
+		lht_plus_1 := plus_1(lht);
+		if (rht = lht_plus_1) then {
+			inc_rht := plus_1(rht);
+			height(x) := inc_rht;
+			ret := x
+		} 
+		else {
+			inc_lht := plus_1(lht);
+			height(x) := inc_lht;
+			ret := x
+		}
+	}
+} 

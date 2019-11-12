@@ -1,0 +1,22 @@
+(*sll-find-safe(x, k) returns b = T (b = F) if there is (not) a node with key k in
+the list pointed to by x *)
+
+(*Error: bad while loop condition*)
+
+Reach([x,y],[next],[NULL])
+
+init {
+ tmp := y
+}
+
+assume(T != F);
+b := F;
+while(x != tmp){
+  kx := key(x);
+  if(kx = k) then {
+    b := T
+  } else {
+    skip
+  };
+  x := next(x)
+}

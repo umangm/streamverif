@@ -1,0 +1,22 @@
+Reach([x],[next],[NULL])
+
+init {
+ z := NULL;
+ w := z
+}
+
+z <- alloc();
+assume(z != NULL);
+next(z) := NULL;
+key(z) := k;
+if(x = NULL) then {
+  x := z
+}
+else {
+  w := next(x);
+  while(w != z) {
+    x := w;
+    w := next(w)
+  };
+  next(x) := z
+}

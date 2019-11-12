@@ -1,0 +1,29 @@
+(*bst-find-safe(x, k) traverses binary search tree pointed to by x and
+if there is a node with key = k, ret is set to point to that node*)
+
+(*Error: programmer skips over left subtrees*)
+
+Reach([x],[left,right],[NULL])
+
+init {
+  ret := NULL;
+  curr := x
+}
+
+assume(T != F);
+while(curr != NULL){
+	kcurr := key(curr);
+	if(kcurr = k) then {
+		ret := curr
+	}
+	else {
+    lt1 := lessThan(k, kcurr);
+		if(lt1 = T) then {
+			curr := left(curr);
+      curr := left(curr)
+		}
+		else {
+			curr := right(curr)
+		}
+	}
+}

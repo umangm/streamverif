@@ -1,0 +1,65 @@
+(*bst-remove-root-safe(x) takes a binary tree pointed to by x and removes
+the root node and replaces it with the least element in the right
+subtree, with the result in ret*)
+
+Reach([x], [left,right], [NULL])
+
+init {
+ xl := NULL;
+ xr := NULL;
+
+ rl := NULL;
+ rr := NULL;
+ par := NULL;
+ par_par := NULL;
+
+ tmp := NULL;
+
+ ret := x
+}
+
+assume(T != F);
+
+if (x = NULL) then {
+ skip
+} else {
+ xl := left(x);
+ xr := right(x);
+ if (xl = NULL) then {
+  if (xr = NULL) then {
+   free(x)
+  } else {
+   free(x);
+   ret := xr
+  }
+ } else {
+  if (xr = NULL) then {
+   free(x);
+   ret := xl
+  } else {
+
+   rl := left(xr);
+   par := xr;
+   par_par := x;
+   while(rl != NULL) {
+    par_par := par;
+    par := rl;
+    tmp := left(rl);
+    tmp := NULL;
+    rl := left(rl)
+   };
+
+   rr := right(par);
+   left(par) := xl;
+   if (par_par = x) then {
+    free(x);
+    ret := par
+   } else {
+    left(par_par) := rr;
+    right(par) := xr;
+    free(x)
+   }
+
+  }
+ }
+}

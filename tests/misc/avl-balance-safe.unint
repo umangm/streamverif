@@ -1,0 +1,220 @@
+(* avl-balance(x): returns ret *)
+(* given an avl tree into which a single node has just been inserted, this program rebalances the tree*)
+
+Reach([x], [left,right], [NULL])
+
+init {
+	l := NULL;
+	r := NULL;
+
+	r_l := NULL;
+	r_r := NULL;
+
+	r_l_l := NULL;
+	r_l_r := NULL;
+
+	l_l := NULL;
+	l_r := NULL;
+
+	l_r_l := NULL;
+	l_r_r := NULL;
+
+	ret := NULL
+}
+
+
+assume(T != F);
+
+if (x = NULL) then {
+ ret := x
+}
+else {
+ l := left(x);
+ r := right(x);
+
+ (*begin case split to determine heights of subtrees, -1 if empty*)
+ if (l = NULL) then {
+  if (r = NULL) then {
+   lht := minus_one;
+   rht := minus_one
+  }
+  else {
+   lht := minus_one;
+   rht := height(r)
+  }
+ }
+ else {
+  if (r = NULL) then {
+   lht := height(l);
+   rht := minus_one
+  }
+  else {
+   lht := height(l);
+   rht := height(r)
+  }
+ }; (*end of case split to determine heights*)
+
+ lht_plus_1 := plus_1(lht);
+ lht_plus_2 := plus_1(lht_plus_1);
+
+ if (rht = lht_plus_2) then {
+  assume(rht != minus_one);
+  (*right child cannot be null if it's height is two more than left child, whatever the left child be*)
+  r_l := left(r);
+  if (r_l = NULL) then {
+   rlht := minus_one
+  }
+  else {
+   rlht := height(r_l)
+  }; 
+  
+  r_r := right(r);
+  if (r_r = NULL) then {
+    rrht := minus_one
+  }
+  else {
+   rrht := height(r_r)
+  };	
+  
+  rlht_LTE_rrht := LTE(rlht, rrht);
+  if (rlht_LTE_rrht = T) then {
+   assume(rrht != minus_one);
+   (*given that right child's height is two more than the left child, the height of the right child must be at least 1 -- since we have that height = -1 means null. Therefore, it cannot be the case that both r_l and r_r are null -- because that would make the height of the right child 0. Since rrht >= rlht, we can assume that r_r is not null, or that rrht != -1*) 
+   inc_rlht := plus_1(rlht);
+   height(x) := inc_rlht;
+   right(x) := r_l;
+   inc_inc_rlht := plus_1(inc_rlht);
+   height(r) := inc_inc_rlht;
+   left(r) := x;
+   ret := r
+  } (*end of case rlht_LTE_rrht = T within case rht = lht_plus_2*)
+  else {
+   assume(rlht != minus_one);
+   (*if rlht > rrht then rlht cannot be -1, i.e., r_l cannot be null*)
+   r_l_l := left(r_l);
+   r_l_r := right(r_l);
+ 
+   inc_lht := plus_1(lht);
+   height(x) := inc_lht;
+
+   right(x) := r_l_l;
+		
+   inc_rrht := plus_1(rrht);
+   height(r) := inc_rrht;
+
+   left(r) := r_l_r;
+  
+   inc_lht := plus_1(lht);
+   inc_inc_lht := plus_1(inc_lht);
+   height(r_l) := inc_inc_lht;
+
+   left(r_l) := x;
+   right(r_l) := r;
+   ret := r_l
+  }
+ } (*end of case rht = lht_plus_2*) 
+ 
+  else {
+  (* rht != lht+2. Therefore, one of the four below things are possible *)
+  (* lht = rht+2 *)
+  (* lht = rht+1 *)
+  (* rht = lht+1 *)
+  (* lht = rht *)
+  (* In the first case, we have similarly as above that r_l is not null. Other cases do not require any assumptions and indeed do not end up having any even in the interpreted sense*)
+  
+  rht_plus_1 := plus_1(rht);
+  rht_plus_2 := plus_1(rht_plus_1);
+  
+  if (lht = rht_plus_2) then {
+   assume(lht != minus_one);
+   (* left child is not null. Has a height of at least 1 *)
+ 
+   l_l := left(l);
+   if (l_l = NULL) then {
+    llht := minus_one
+   }
+   else {
+    llht := height(l_l)
+   };
+ 
+   l_r := right(l);
+   if (l_r = NULL) then {
+    lrht := minus_one
+   }
+   else {
+    lrht := height(l_r)
+   };
+	
+   lrht_lte_llht := LTE(lrht, llht);
+
+   if (lrht_lte_llht = T) then {
+    assume(llht != minus_one);
+    (*similarly reasoning as above*)
+    inc_lrht := plus_1(lrht);
+    height(x) := inc_lrht;
+
+    left(x) := l_r;
+
+    lrht_plus_1 := plus_1(lrht);
+    inc_inc_lrht := plus_1(lrht_plus_1);
+    height(l) := inc_inc_lrht;
+
+    right(l) := x;
+
+    ret := l
+   } (* end of case lrht_lte_llht = T within case lht = rht_plus_2 *) 
+	
+   else {
+    assume(lrht != minus_one);			
+    (* reasoning similarly as above *)
+    l_r_l := left(l_r);
+    l_r_r := right(l_r);
+
+    inc_rht := plus_1(rht);
+    height(x) := inc_rht;
+
+    left(x) := l_r_r;
+			
+    inc_llht := plus_1(llht);
+			
+    height(l) := inc_llht;
+
+    right(l) := l_r_l;
+
+    rht_plus_1 := plus_1(rht);
+    inc_inc_rht := plus_1(rht);
+
+    height(l_r) := inc_inc_rht;
+
+    left(l_r) := l;
+    right(l_r) := x;
+
+    ret := l_r
+   } 
+  } (* end of case lht = rht_plus_2 *) 
+	
+  else {
+   lht_plus_1 := plus_1(lht);
+   
+   if (rht = lht_plus_1) then {
+    inc_rht := plus_1(rht);
+    height(x) := inc_rht;
+    ret := x
+   }
+   else {
+    rht_plus_1 := plus_1(rht);
+
+    if (lht = rht_plus_1) then {
+     inc_lht := plus_1(lht);
+	height(x) := inc_lht;
+	ret := x
+    }
+    else {
+     (* lht = rht *)
+     ret := x
+    }
+   }
+  }
+ }
+} (*end of outermost else*)
+

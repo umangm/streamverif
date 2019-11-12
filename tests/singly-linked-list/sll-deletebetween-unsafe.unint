@@ -1,0 +1,50 @@
+(*delete_between(x,k1,k2): returns ret*)
+(*Given a list using the pointer 'n', deletes all nodes with keys between k1 and k2 (including)*)
+
+(*In the implementation below we assume k1 <= k2. Should not be too hard to handle the case k1 > k2 as the user pleases -- declare error or swap values and then execute as usual*)
+
+(*ERROR: x updated to n(x) and then freed*)
+
+Reach([x],[n],[nil])
+init {
+ ret := nil;
+ x_prime := x
+}
+
+assume(T != F);
+k1_lte_k2 := LTE(k1,k2);
+assume (k1_lte_k2 = T);
+
+ret := x;
+
+if (x = nil) then {
+ skip
+} 
+else {
+ while (x != nil) {
+  kx := key(x);
+  kx_gte_k1 := LTE(k1,kx);
+  kx_lte_k2 := LTE(kx,k2);
+  
+  if (kx_gte_k1 = T) then {
+   if (kx_lte_k2 = T) then {
+    flag := T
+   }
+   else {
+    flag := F
+   }
+  }
+  else {
+   flag := F
+  };
+  x := n(x);
+  (*ERROR introduced*)
+  if (flag = T) then {
+   free(x)
+  }
+  else {
+   skip
+  };
+  x := x_prime
+ }  
+}

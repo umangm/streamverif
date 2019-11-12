@@ -1,0 +1,242 @@
+(*if either is empty*)
+empty_x := empty(x);
+empty_y := empty(y);
+if (empty_x = T) then {
+  ret := y;
+  carry <- alloc();
+  empty(carry) := T;
+  x := sibling(x);
+  y := sibling(y)
+} else {
+  if (empty_y = T) then {
+    ret := x;
+    carry <- alloc();
+    empty(carry) := T;
+    x := sibling(x);
+    y := sibling(y)
+  } else {
+
+    ret <- alloc();
+    empty(ret) := T;
+    (*carry := merge x and y*)
+    key_x := key(x);
+    key_y := key(y);
+    x_lessThan_y := LT(key_x, key_y);
+
+    if (x_lessThan_y = T) then {
+      (*update y sibling to x's first child*)
+      child_x := child(x);
+      tmp := sibling(y);
+      sibling(y) := child_x;
+      (*and x's child to y*)
+      child(x) := y;
+      carry := x;
+      x := sibling(x);
+      y := tmp
+    } else {
+      child_y := child(y);
+      tmp := sibling(x);
+      sibling(x) := child_y;
+      (*and y's child to x*)
+      child(y) := x;
+      carry := y;
+      y := sibling(y);
+      x := tmp
+    }
+  }
+};
+
+curr := ret;
+(*while x != NULL and y != NULL*)
+flag := F;
+if (x != NULL) then {
+  if (y != NULL) then {
+    flag := T
+  } else {
+    skip
+  }
+} else {
+  skip
+};
+while (flag = T) {
+  empty_x := empty(x);
+  empty_y := empty(y);
+  empty_carry := empty(carry);
+
+  noneNonEmpty := F;
+  oneNonEmpty := F;
+  twoNonEmpty := F;
+  threeNonEmpty := F;
+
+  (*cases: all 3 nonempty, 2 nonempty, 1 nonempty, 0 nonempty*)
+  if (empty_x = T) then {
+    if (empty_y = T) then {
+      if (empty_carry = T) then {
+
+        noneNonEmpty := T
+
+      } else {
+
+        oneNonEmpty := T;
+        one := carry
+
+      }
+    } else { (*empty_y != T*)
+      if (empty_carry = T) then {
+
+        oneNonEmpty := T;
+        one := y
+
+      } else {
+
+        twoNonEmpty := T;
+        one := y;
+        two := carry
+
+      }
+    }
+  } else { (*empty_x != T*)
+    if (empty_y = T) then {
+      if (empty_carry = T) then {
+
+        oneNonEmpty := T;
+        one := x
+
+      } else {
+
+        twoNonEmpty := T;
+        one := x;
+        two := carry
+
+      }
+    } else (*empty_y != T*) {
+      if (empty_carry = T) then {
+
+        twoNonEmpty := T;
+        one := x;
+        two := y
+
+      } else {
+
+        threeNonEmpty := T;
+        one := x;
+        two := y;
+        three := carry
+
+      }
+    }
+  };
+
+  if (noneNonEmpty = T) then {
+
+    sibling(curr) := x;
+    curr := sibling(curr);
+    (*allocate for carry here?*)
+    x := sibling(x);
+    y := sibling(y)
+
+  } else {
+    if (oneNonEmpty = T) then {
+
+      sibling(curr) := one;
+      curr := sibling(curr);
+      carry <- alloc();
+      empty(carry) := T;
+      x := sibling(x);
+      y := sibling(y)
+
+    } else {
+      if (twoNonEmpty = T) then {
+
+        sibling_x := sibling(x);
+        sibling_y := sibling(y);
+
+        tmp <- alloc();
+        empty(tmp) := T;
+        sibling(curr) := tmp;
+        curr := tmp;
+
+        (*carry := merge one and two*)
+        key_one := key(one);
+        key_two := key(two);
+        one_lessThan_two := LT(key_one, key_two);
+
+        if (one_lessThan_two = T) then {
+          (*update two's sibling to one's first child*)
+          child_one := child(one);
+          sibling(two) := child_one;
+          (*and one's child to two*)
+          child(one) := two;
+          carry := one;
+        } else {
+          child_two := child(two);
+          sibling(one) := child_two;
+          (*and two's child to one*)
+          child(two) := one;
+          carry := two;
+        };
+
+        x := sibling_x;
+        y := sibling_y
+
+      } else {
+        if (threeNonEmpty = T) then {
+
+          sibling(curr) := three;
+          curr := sibling(curr);
+          sibling_x := sibling(x);
+          sibling_y := sibling(y);
+
+          (*carry := merge one and two*)
+          key_one := key(one);
+          key_two := key(two);
+          one_lessThan_two := LT(key_one, key_two);
+
+          if (one_lessThan_two = T) then {
+            (*update two's sibling to one's first child*)
+            child_one := child(one);
+            sibling(two) := child_one;
+            (*and one's child to two*)
+            child(one) := two;
+            carry := one;
+          } else {
+            child_two := child(two);
+            sibling(one) := child_two;
+            (*and two's child to one*)
+            child(two) := one;
+            carry := two;
+          };
+
+          x := sibling_x;
+          y := sibling_y
+
+        } else {
+          skip (*should be unreachable*)
+        }
+      }
+    }
+  };
+
+  flag := F;
+  if (x != NULL) then {
+    if (y != NULL) then {
+      flag := T
+    } else {
+      skip
+    }
+  } else {
+    skip
+  }
+
+}; (*end while*)
+
+(*join whichever remains (if any) to curr*)
+if (x != NULL) then {
+  sibling(curr) := x
+} else {
+  if (y != NULL) then {
+    sibling(curr) := y
+  } else {
+    sibling(curr) := NULL
+  }
+}

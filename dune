@@ -1,0 +1,32 @@
+; FOR RUNNING IN UTOP:
+
+; Load the project into utop at the command prompt:
+; >> dune utop .
+
+; (library
+; (name main)
+; (libraries core ppx_inline_test sexplib ppx_sexp_conv)
+; (inline_tests)
+; (preprocess (pps ppx_inline_test ppx_sexp_conv))
+; (modules main fixpoint state ast typechecker execution myparser mylexer))
+
+
+
+; FOR RUNNING ON COMMAND LINE:
+
+(executable
+  (name main)
+  (libraries core) ; sexplib ppx_sexp_conv
+  ; (preprocess (pps ppx_sexp_conv))
+  (modules main fixpoint state ast typechecker execution myparser mylexer))
+
+
+
+(env
+  (dev
+    (flags (:standard -w -26-27 -warn-error -A))))
+
+(menhir
+(modules myparser))
+
+(ocamllex mylexer)

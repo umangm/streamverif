@@ -1,0 +1,54 @@
+Reach([x],[next],[NULL])
+
+init {
+ z := NULL;
+ w := z
+}
+
+assume(T != F);
+z <- alloc();
+key(z) := k;
+if( x = NULL ) then {
+	x := z
+}
+else {
+	kx := key(x);
+  lte1 := LTE(k, kx);
+	if(lte1 = T) then {
+		next(z) := x
+	}
+	else {
+		b := F;
+		w := next(x);
+
+    (* decompose the while condition *)
+
+    lte2 := LTE(kx, k);
+    if (lte2 = T) then {
+      if (w != NULL) then {
+        flag := T
+      } else {
+        flag := F
+      }
+    } else {
+      flag := F
+    };
+    while(flag = T) {
+			x := w;
+			kx := key(x);
+			w := next(w);
+      lte2 := LTE(kx, k);
+      if (lte2 = T) then {
+        if (w != NULL) then {
+          flag := T
+        } else {
+          flag := F
+        }
+      } else {
+        flag := F
+      }
+    };
+		next(x) := z;
+		next(z) := w
+	}
+}

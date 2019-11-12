@@ -1,0 +1,21 @@
+(*sll_append(x,y): returns ret*)
+(*Given two lists, using the pointer 'n', append y to the end of x*)
+
+Reach([x,y],[n],[nil])
+init {
+ tmp := nil;
+ ret := nil
+}
+
+assume (x != y);
+if (x = nil) then {
+ ret := y
+ } else {
+ ret := x;
+ tmp := n(x);
+ while (tmp != nil) {
+  x := tmp;
+  tmp := n(tmp)
+ };
+ n(x) := y
+}

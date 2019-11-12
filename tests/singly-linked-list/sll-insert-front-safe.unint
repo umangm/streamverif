@@ -1,0 +1,10 @@
+Reach([x],[next],[NULL])
+
+init
+{
+  z := NULL
+}
+
+z <- alloc();
+key(z) := k;
+next(z) := x

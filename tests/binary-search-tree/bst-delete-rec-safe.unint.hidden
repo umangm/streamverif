@@ -1,0 +1,8 @@
+(* Delete a node with key k from binary search tree rooted at x *)
+(* This might be very complex, haven't figured out how to do it yet *)
+
+Reach([x],[left,right],[NIL])
+
+init {
+
+}
