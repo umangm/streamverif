@@ -1,3 +1,7 @@
+# StreamVerif - Automata Based Verification of Uninterpreted Programs
+
+## Instructions for artifact of `Deciding Memory Safety for Single-Pass Heap-Manipulating Programs`
+
 Dependencies:
 
 1. Ocaml version 4.07.0
