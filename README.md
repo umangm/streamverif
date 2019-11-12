@@ -1,6 +1,7 @@
-# StreamVerif - Automata Based Verification of Uninterpreted Programs
+# StreamVerif
+## Automata Based Verification of Uninterpreted Programs
 
-## Instructions for artifact of `Deciding Memory Safety for Single-Pass Heap-Manipulating Programs`
+### Instructions for artifact of `Deciding Memory Safety for Single-Pass Heap-Manipulating Programs`
 
 Dependencies:
 
