@@ -4,7 +4,7 @@ from pathlib import Path
 import ntpath
 import re
 import subprocess
-
+import os
 
 output_dir = "output/"
 example_dir_prefix = "tests/"
@@ -70,8 +70,10 @@ for folder in folders:
                     loc += 1
         info = info_string(str(basename_extensionless), str(loc), str(user_time_str), str(safety), str(incoherent), str(num_states))
         print(info)
+        if not os.path.exists(output_dir):
+            os.makedirs(output_dir)
         output_file = output_dir+basename_extensionless+".out"
-        with open(output_file, 'w') as fh:
+        with open(output_file, 'w+') as fh:
             fh.write(info)
             fh.write("\n\n----------- RAW OUTPUT -----------\n\n")
             fh.write(res)
